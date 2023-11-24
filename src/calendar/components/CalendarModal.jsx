@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { addHours } from 'date-fns';
+import { addHours, addYears, setHours, setMinutes } from 'date-fns';
 import es from 'date-fns/locale/es';
 
 import Modal from 'react-modal';
@@ -96,6 +96,8 @@ export const CalendarModal = () => {
             showTimeSelect
             locale="es"
             timeCaption='Hora'
+            minTime={ setHours( setMinutes( new Date(), formValues.start.getMinutes() ), formValues.start.getHours() ) }
+            maxTime={ setHours( setMinutes( addYears( new Date(), 1000 ) , 30 ), 23 ) }
           />
         </div>
 
