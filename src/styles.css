@@ -28,6 +28,10 @@
   opacity: 0;
 }
 
+.ReactModalPortal .react-datepicker-wrapper {
+  display: block;
+}
+
 .modal {
   background: white;
   border-radius: 5px;
