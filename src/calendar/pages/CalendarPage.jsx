@@ -9,7 +9,7 @@ import { useUiStore, useCalendarStore } from '../../hooks';
 
 export const CalendarPage = () => {
 
-  const { events } = useCalendarStore();
+  const { events, setActiveEvent } = useCalendarStore();
 
   const { openDateModal, toggleDateModal } = useUiStore();
 
@@ -34,7 +34,7 @@ export const CalendarPage = () => {
   }
 
   const onSelect = ( event ) => {
-    console.log({ onSelect: event });
+    setActiveEvent( event );
   }
 
   const onViewChanged = ( event ) => {

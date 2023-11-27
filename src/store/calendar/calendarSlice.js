@@ -4,6 +4,7 @@ import { addHours } from 'date-fns';
 
 // Esto va a tirar un error de consola: "A non-serializable value...", basicamente explica que solo se recomienda poner en el store de Redux, elementos serializables, arrays y datos primitivos, y acá estamos agregando al store un objeto con metodos, aun asi, el codigo es funcional, pero no recomendable de hacer, mas adelante se va a cambiar esto
 const tempEvent = {
+  _id: new Date().getTime(),
   title: 'Cumpleaños',
   notes: 'Hay que comprar el pastel',
   start: new Date(),
@@ -25,7 +26,11 @@ const initialState = {
 export const calendarSlice = createSlice({
   name: 'calendar',
   initialState,
-  reducers: {}
+  reducers: {
+    onSetActiveElement: ( state, { payload } ) => {
+      state.activeEvent = payload;
+    }
+  }
 });
 
-export const {} = calendarSlice.actions;
+export const { onSetActiveElement } = calendarSlice.actions;
