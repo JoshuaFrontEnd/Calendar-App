@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { onAddNewEvent, onSetActiveElement, onUpdateEvent } from '../store';
+import { onAddNewEvent, onDeleteEvent, onSetActiveElement, onUpdateEvent } from '../store';
 
 export const useCalendarStore = () => {
 
@@ -11,7 +11,7 @@ export const useCalendarStore = () => {
     dispatch( onSetActiveElement( calendarEvent ) );
   }
 
-  // Cuando comienta con "start" por convencion significa que va a grabar
+  // Cuando comienta con "start" por convencion significa que va a empezar a hacer algo
   const startSavingEvent = async ( calendarEvent ) => {
 
     // TODO: llegar al backend
@@ -27,13 +27,20 @@ export const useCalendarStore = () => {
 
   }
 
+  const startDeletingEvent = () => {
+    dispatch( onDeleteEvent() );
+  }
+
   return {
     // Propiedades
     events,
     activeEvent,
+    // Si tengo una nota activa tengo un objeto, si no, tengo null, al colocarle doble negacion puedo genear una propiedad que devuelva true si es objeto, o false si es null
+    hasEventSelected: !!activeEvent,
 
     // Metodos
+    startDeletingEvent,
     setActiveEvent,
-    startSavingEvent
+    startSavingEvent,
   }
 }
