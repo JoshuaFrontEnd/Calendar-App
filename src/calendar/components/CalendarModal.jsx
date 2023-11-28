@@ -29,15 +29,15 @@ Modal.setAppElement('#root');
 
 export const CalendarModal = () => {
 
-  const { activeEvent } = useCalendarStore();
+  const { activeEvent, startSavingEvent } = useCalendarStore();
 
   const { closeDateModal, isDateModalOpen, toggleDateModal } = useUiStore();
 
   const [ formSubmitted, setFormSubmitted ] = useState( false );
 
   const [ formValues, setFormValues ] = useState({
-    title: 'Joshua',
-    notes: 'Torres',
+    title: '',
+    notes: '',
     start: new Date(),
     end: addHours( new Date(), 2 ),
   })
@@ -84,7 +84,7 @@ export const CalendarModal = () => {
     closeDateModal();
   }
 
-  const onSubmit = ( event ) => {
+  const onSubmit = async ( event ) => {
     event.preventDefault();
     setFormSubmitted( true );
 
@@ -99,7 +99,11 @@ export const CalendarModal = () => {
     // Validando que se haya ingresado al menos un caracter en el titulo
     if ( formValues.title.length <= 0 ) return;
 
-    console.log( formValues );
+    await startSavingEvent( formValues );
+
+    closeDateModal();
+
+    setFormSubmitted( false );
 
   }
 
