@@ -9,7 +9,7 @@ import { useUiStore, useCalendarStore } from '../../hooks';
 
 export const CalendarPage = () => {
 
-  const { events, setActiveEvent } = useCalendarStore();
+  const { events, setActiveEvent, unsetActiveEvent } = useCalendarStore();
 
   const { openDateModal, toggleDateModal } = useUiStore();
 
@@ -42,6 +42,13 @@ export const CalendarPage = () => {
     setLastView( event );
   }
 
+  const onSelectSlot = ({ action }) => {
+    if ( action === 'click' ) {
+      console.log('deseleccionar');
+      unsetActiveEvent();
+    }
+  }
+
   return (
     <>
       <NavBar />
@@ -62,6 +69,8 @@ export const CalendarPage = () => {
         onDoubleClickEvent={ onDoubleClick }
         onSelectEvent={ onSelect }
         onView={ onViewChanged }
+        selectable
+        onSelectSlot={ onSelectSlot }
       />
 
       <CalendarModal />
