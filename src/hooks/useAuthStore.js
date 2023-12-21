@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
+
 import calendarApi from '../api/calendarApi';
 import { clearErrorMessage, onChecking, onLogin, onLogout } from '../store';
 
@@ -29,10 +30,10 @@ export const useAuthStore = () => {
 
     } catch ( error ) {
 
-      // Si los datos ingresados en el formulario del login son incorrectos, envio el siguiente mensaje:
+      // Si los datos ingresados en el formulario del login son incorrectos, seteo el mensaje de error
       dispatch( onLogout('Credenciales incorrectas') );
 
-      // Despues de algunos milisegundos el mensaje anterior es eliminado
+      // Despues de algunos milisegundos el mensaje de error es eliminado, esto se hace para que siempre se pueda setear un mensaje de error cuando ocurra un error, se usa "setTimeout" para que en esos milisegundos el mensaje de error sea capturado y lo pueda mostrar SweetAlert configurado en LoginPage.jsx
       setTimeout(() => {
         dispatch( clearErrorMessage() );
       }, 10);
