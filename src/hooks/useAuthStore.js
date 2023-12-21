@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import calendarApi from '../api/calendarApi';
+import { clearErrorMessage, onChecking, onLogin, onLogout } from '../store';
 
 export const useAuthStore = () => {
 
@@ -8,17 +9,33 @@ export const useAuthStore = () => {
 
   // Login
   const startLogin = async ({ email, password }) => {
-    console.log({ email, password });
+
+    // Dejo la app en un estado de "carga" mientras hace el login
+    dispatch( onChecking );
 
     try {
 
-      const resp = await calendarApi.post('/auth', { email, password });
+      // Si los datos ingresados en el formulario del login son correctos me traigo la data del usuario
+      const { data } = await calendarApi.post('/auth', { email, password });
 
-      console.log({ resp });
+      // Seteo en local el token del usuario
+      localStorage.setItem('token', data.token );
+
+      // Seteo en local la fecha de inicio de cuando se seteo el token, de esta manera puedo calcular el tiempo de duracion del token, que en el backend lo setee de 2 horas
+      localStorage.setItem('token-init-date', new Date().getTime() );
+
+      // "Grabo" en el estado de la app los datos del usuario extraidos de la consulta al backend, al hacer esto, en el estado el "status" cambia a "authenticated" y en el usuario se agrega la siguiente informacion:
+      dispatch( onLogin({ name: data.name, uid: data.uid }) );
 
     } catch ( error ) {
 
-      console.log({ error });
+      // Si los datos ingresados en el formulario del login son incorrectos, envio el siguiente mensaje:
+      dispatch( onLogout('Credenciales incorrectas') );
+
+      // Despues de algunos milisegundos el mensaje anterior es eliminado
+      setTimeout(() => {
+        dispatch( clearErrorMessage() );
+      }, 10);
 
     }
   }
