@@ -75,13 +75,11 @@ export const useAuthStore = () => {
     const token = localStorage.getItem( 'token' );
 
     // Si el token no existe hacer logout
-    if ( !token ) return dispatch( onLogout() )
+    if ( !token ) return dispatch( onLogout() );
 
     try {
 
       const { data } = await calendarApi.get( 'auth/renew' );
-
-      console.log({ data });
 
       localStorage.setItem( 'token', data.token );
 
@@ -97,6 +95,12 @@ export const useAuthStore = () => {
     }
   }
 
+  // Logout
+  const startLogout = () => {
+    localStorage.clear();
+    dispatch( onLogout() );
+  }
+
   return {
     // Propiedades
     status,
@@ -106,7 +110,8 @@ export const useAuthStore = () => {
     // Metodos
     checkAuthToken,
     startLogin,
-    startRegister
+    startRegister,
+    startLogout
 
   }
 }
