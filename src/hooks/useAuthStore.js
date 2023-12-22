@@ -12,7 +12,7 @@ export const useAuthStore = () => {
   const startLogin = async ({ email, password }) => {
 
     // Dejo la app en un estado de "carga" mientras hace el login
-    dispatch( onChecking );
+    dispatch( onChecking() );
 
     try {
 
