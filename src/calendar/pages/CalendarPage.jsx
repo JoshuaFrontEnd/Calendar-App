@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Calendar } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
@@ -9,7 +9,7 @@ import { useUiStore, useCalendarStore } from '../../hooks';
 
 export const CalendarPage = () => {
 
-  const { events, setActiveEvent, unsetActiveEvent } = useCalendarStore();
+  const { events, setActiveEvent, unsetActiveEvent, startLoadingEvents } = useCalendarStore();
 
   const { openDateModal, toggleDateModal } = useUiStore();
 
@@ -48,6 +48,13 @@ export const CalendarPage = () => {
       unsetActiveEvent();
     }
   }
+
+  useEffect(() => {
+
+    startLoadingEvents();
+
+  }, [])
+
 
   return (
     <>
