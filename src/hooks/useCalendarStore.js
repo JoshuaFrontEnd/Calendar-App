@@ -1,11 +1,13 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { onAddNewEvent, onDeleteEvent, onSetActiveElement, onUnsetActiveEvent, onUpdateEvent } from '../store';
+import calendarApi from '../api/calendarApi';
 
 export const useCalendarStore = () => {
 
   const dispatch = useDispatch();
 
   const { events, activeEvent } = useSelector( state => state.calendar );
+  const { user } = useSelector( state => state.auth );
 
   // Set evento activo
   const setActiveEvent = ( calendarEvent ) => {
@@ -20,15 +22,14 @@ export const useCalendarStore = () => {
   // Cuando comienta con "start" por convencion significa que va a empezar a hacer algo
   const startSavingEvent = async ( calendarEvent ) => {
 
-    // TODO: llegar al backend
-
-    // TODO: bien
     if ( calendarEvent._id  ) {
       // Actualizando
       dispatch( onUpdateEvent({ ...calendarEvent }) );
     } else {
       // Creando
-      dispatch( onAddNewEvent({ ...calendarEvent, _id: new Date().getTime() }) );
+      const { data } = await calendarApi.post('/events', calendarEvent );
+
+      dispatch( onAddNewEvent({ ...calendarEvent, id: data.evento.id, user }) );
     }
 
   }
