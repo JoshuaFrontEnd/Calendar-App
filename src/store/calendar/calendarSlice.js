@@ -3,22 +3,23 @@ import { createSlice } from '@reduxjs/toolkit';
 import { addHours } from 'date-fns';
 
 // Esto va a tirar un error de consola: "A non-serializable value...", basicamente explica que solo se recomienda poner en el store de Redux, elementos serializables, arrays y datos primitivos, y acá estamos agregando al store un objeto con metodos, aun asi, el codigo es funcional, pero no recomendable de hacer, mas adelante se va a cambiar esto
-const tempEvent = {
-  _id: new Date().getTime(),
-  title: 'Cumpleaños',
-  notes: 'Hay que comprar el pastel',
-  start: new Date(),
-  end: addHours( new Date(), 2 ),
-  bgColor: '#fafafa',
-  user: {
-    _id: '123',
-    name: 'Joshua'
-  }
-}
+// const tempEvent = {
+//   _id: new Date().getTime(),
+//   title: 'Cumpleaños',
+//   notes: 'Hay que comprar el pastel',
+//   start: new Date(),
+//   end: addHours( new Date(), 2 ),
+//   bgColor: '#fafafa',
+//   user: {
+//     _id: '123',
+//     name: 'Joshua'
+//   }
+// }
 
 const initialState = {
+  isLoadingEvents: true,
   events: [
-    tempEvent
+    // tempEvent
   ],
   activeEvent: null,
 }
@@ -50,6 +51,22 @@ export const calendarSlice = createSlice({
     },
     onUnsetActiveEvent: ( state ) => {
       state.activeEvent = null;
+    },
+    onLoadEvents: ( state, { payload = [] } ) => {
+      state.isLoadingEvents = false;
+      // state.events = payload;
+
+      payload.forEach( event => {
+
+        // Si existe en la base de datos
+        const exists = state.events.some( dbEvent => dbEvent._id === event.id );
+
+        // Si NO existe en la base de datos
+        if ( !exists ) {
+          state.events.push( event );
+        }
+
+      });
     }
   }
 });
@@ -59,5 +76,6 @@ export const {
   onAddNewEvent,
   onUpdateEvent,
   onDeleteEvent,
-  onUnsetActiveEvent
+  onUnsetActiveEvent,
+  onLoadEvents
 } = calendarSlice.actions;
