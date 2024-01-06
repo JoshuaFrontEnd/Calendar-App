@@ -132,4 +132,26 @@ describe('Pruebas en el useAuthStore', () => {
 
   })
 
+  test('startRegister debe de fallar la creacion de un usuario', async () => {
+
+    const mockStore = getMockStore({ ...notAuthenticatedState });
+
+    const { result } = renderHook(() => useAuthStore(), {
+      wrapper: ({ children }) => <Provider store={mockStore}>{children}</Provider>
+    });
+
+    await act( async () => {
+      await result.current.startRegister( testUserCredentials );
+    });
+
+    const { errorMessage, status, user } = result.current;
+
+    expect({ errorMessage, status, user }).toEqual({
+      errorMessage: 'Ya existe un usuario con ese correo',
+      status: 'not-authenticated',
+      user: {}
+    })
+
+  })
+
 })
