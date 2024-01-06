@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { authSlice } from '../../src/store';
-import { renderHook } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 import { useAuthStore } from '../../src/hooks/useAuthStore';
 import { Provider } from 'react-redux';
-import { initialState } from '../fixtures/authStates';
+import { initialState, notAuthenticatedState } from '../fixtures/authStates';
+import { testUserCredentials } from '../fixtures/testUser';
 
 const getMockStore = ( initialState ) => {
   return configureStore({
@@ -36,6 +37,32 @@ describe('Pruebas en el useAuthStore', () => {
       startRegister: expect.any( Function ),
       startLogout: expect.any( Function )
     })
+
+  })
+
+  test('startLogin debe de realizar el login correctamente', async () => {
+
+    localStorage.clear();
+    const mockStore = getMockStore({ ...notAuthenticatedState });
+
+    const { result } = renderHook( () => useAuthStore(), {
+      wrapper: ({ children }) => <Provider store={ mockStore }>{ children }</Provider>
+    });
+
+    await act( async () => {
+      await result.current.startLogin( testUserCredentials );
+    });
+
+    const { errorMessage, status, user } = result.current;
+
+    expect({ errorMessage, status, user }).toEqual({
+      errorMessage: undefined,
+      status: 'authenticated',
+      user: { name: 'Test User', uid: '6596c3a1993c2e03d550130e' },
+    })
+
+    expect( localStorage.getItem( 'token' ) ).toEqual( expect.any( String ) );
+    expect( localStorage.getItem( 'token-init-date' ) ).toEqual( expect.any( String ) );
 
   })
 
