@@ -5,6 +5,7 @@ import { useAuthStore } from '../../src/hooks/useAuthStore';
 import { Provider } from 'react-redux';
 import { initialState, notAuthenticatedState } from '../fixtures/authStates';
 import { testUserCredentials } from '../fixtures/testUser';
+import calendarApi from '../../src/api/calendarApi';
 
 const getMockStore = ( initialState ) => {
   return configureStore({
@@ -19,6 +20,8 @@ const getMockStore = ( initialState ) => {
 
 
 describe('Pruebas en el useAuthStore', () => {
+
+  beforeEach(() => localStorage.clear() );
 
   test('debe de regresar los valores por defecto', () => {
 
@@ -42,7 +45,6 @@ describe('Pruebas en el useAuthStore', () => {
 
   test('startLogin debe de realizar el login correctamente', async () => {
 
-    localStorage.clear();
     const mockStore = getMockStore({ ...notAuthenticatedState });
 
     const { result } = renderHook( () => useAuthStore(), {
@@ -58,7 +60,7 @@ describe('Pruebas en el useAuthStore', () => {
     expect({ errorMessage, status, user }).toEqual({
       errorMessage: undefined,
       status: 'authenticated',
-      user: { name: 'Test User', uid: '6596c3a1993c2e03d550130e' },
+      user: { name: 'Test User', uid: '6599d2b7cde0322e13b193e7' },
     })
 
     expect( localStorage.getItem( 'token' ) ).toEqual( expect.any( String ) );
@@ -68,7 +70,6 @@ describe('Pruebas en el useAuthStore', () => {
 
   test('startLogin debe de fallar la autenticacion', async () => {
 
-    localStorage.clear();
     const mockStore = getMockStore({ ...notAuthenticatedState });
 
     const { result } = renderHook( () => useAuthStore(), {
